@@ -40,7 +40,7 @@ function calcSimilarity (params) {
 
     finalScore = roundTo(ageScore + latitudeScore + longitudeScore + monthlyIncomeScore + experiencedScore, 1);
     people['score'] = finalScore;
-    console.log(people);
+    // console.log(people);
     if (people['score'] > 0) {
       calcData.push(people);
     }
