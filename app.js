@@ -22,12 +22,13 @@ var recommender = require('./recommender')
 // Get method for
 
 app.get('/people-like-you', function(req, res) {
-  query = req.query
-  recommdtn = recommender.peopleLikeYou(query)
-  res.send(recommdtn);
+  var query = req.query
+  var reslt = {"peopleLikeYou": ''};
+  reslt["peopleLikeYou"] = recommender.peopleLikeYou(query);
+  res.sendFile('index.html');
 })
 
-const PORT = 5000;
+const PORT = 8888;
 app.listen(PORT, () => {
   console.log(`server running on port ${PORT}`)
 });
