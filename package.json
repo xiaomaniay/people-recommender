@@ -25,6 +25,8 @@
     "csvtojson": "^2.0.8",
     "express": "^4.16.4",
     "fs": "0.0.1-security",
-    "nodemon": "^1.18.9"
+    "math": "0.0.3",
+    "nodemon": "^1.18.9",
+    "round-to": "^3.0.0"
   }
 }

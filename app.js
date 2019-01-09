@@ -3,22 +3,27 @@ const csvtojson = require('csvtojson');
 const csvFileInput = 'data.csv';
 const fs = require('fs');
 
-csvtojson()
-.fromFile(csvFileInput)
-.then((jsonObj)=>{
-  fs.writeFileSync('data.json', JSON.stringify(jsonObj))
-})
+// Convert the csv data to json.
+try {
+  fs.accessSync('./data.json')
+} catch (e) {
+  csvtojson()
+  .fromFile(csvFileInput)
+  .then((jsonObj)=>{
+    fs.writeFileSync('data.json', JSON.stringify(jsonObj))
+  })
+}
 
 // Creating the app.
 var express = require('express');
 var app = express();
 var recommender = require('./recommender')
 
-// Get method for 
+// Get method for
 
 app.get('/people-like-you', function(req, res) {
   query = req.query
-  recommdtn = 
+  recommdtn = recommender.peopleLikeYou(query)
   res.send(recommdtn);
 })
 
