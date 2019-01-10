@@ -4,7 +4,7 @@
   "description": "With a data in this repo, build an API that sends 10 potential investor similar with a person described in the query parameters.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "node_modules/.bin/nodemon app.js --exec babel-node --"
   },
   "repository": {
@@ -28,5 +28,10 @@
     "math": "0.0.3",
     "nodemon": "^1.18.9",
     "round-to": "^3.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "request": "^2.88.0"
   }
 }

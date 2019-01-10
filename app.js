@@ -19,8 +19,7 @@ var express = require('express');
 var app = express();
 var recommender = require('./recommender')
 
-// Get method for
-
+// Suggest 10 people that best match the user's profile
 app.get('/people-like-you', function(req, res) {
   var query = req.query
   var reslt = {"peopleLikeYou": ''};

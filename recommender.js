@@ -6,14 +6,16 @@ function extractParam (query){
   var longitude = 0;
   var monthlyIncome = 0;
   var experienced = false;
+  var most = '';
 
   if (query.age) {age = query.age};
   if (query.latitude) { latitude = query.latitude};
   if (query.longitude) {longitude = query.longitude};
   if (query.monthlyIncome) {monthlyIncome = query.monthlyIncome};
   if (query.experienced) {experienced = query.experienced};
+  if (query.most) {most = query.most};
 
-  return {age: age, latitude: latitude, longitude: longitude, monthlyIncome: monthlyIncome, experienced: experienced};
+  return {age: age, latitude: latitude, longitude: longitude, monthlyIncome: monthlyIncome, experienced: experienced, most: most};
 
 };
 
@@ -30,6 +32,12 @@ function calcSimilarity (params) {
   const math = require('math');
   const roundTo = require('round-to');
   const aspectScore = {age: 0.2, latitude: 0.2, longitude: 0.2, monthlyIncome: 0.2, experienced: 0.2};
+
+  if (params.most != '') {
+    var mostAspect = params.most;
+    aspectScore[mostAspect] = aspectScore[mostAspect] * 2;
+  }
+
   for (var i = 0; i < jsonData.length; i++) {
     people = jsonData[i];
     ageScore = math.max(aspectScore.age * (1 - math.abs((people.age - params.age) / params.age)), 0);
@@ -38,8 +46,10 @@ function calcSimilarity (params) {
     monthlyIncomeScore = math.max(aspectScore.monthlyIncome * (1 - math.abs((people['monthly income'] - params.monthlyIncome) / params.monthlyIncome)), 0);
     experiencedScore = (people.experienced == params.experienced) ? aspectScore.experienced : 0;
 
-    finalScore = roundTo(ageScore + latitudeScore + longitudeScore + monthlyIncomeScore + experiencedScore, 1);
+    totalScore = (ageScore + latitudeScore + longitudeScore + monthlyIncomeScore + experiencedScore) / (aspectScore.age + aspectScore.latitude + aspectScore.longitude + aspectScore.monthlyIncome + aspectScore.experienced)
+    finalScore = roundTo(totalScore, 1);
     people['score'] = finalScore;
+
     // console.log(people);
     if (people['score'] > 0) {
       calcData.push(people);
