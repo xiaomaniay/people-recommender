@@ -1,21 +1,8 @@
 // Extract query parameters.
 function extractParam (query){
 
-  var age = 0;
-  var latitude = 0;
-  var longitude = 0;
-  var monthlyIncome = 0;
-  var experienced = false;
-  var most = '';
-
-  if (query.age) {age = query.age};
-  if (query.latitude) { latitude = query.latitude};
-  if (query.longitude) {longitude = query.longitude};
-  if (query.monthlyIncome) {monthlyIncome = query.monthlyIncome};
-  if (query.experienced) {experienced = query.experienced};
-  if (query.most) {most = query.most};
-
-  return {age: age, latitude: latitude, longitude: longitude, monthlyIncome: monthlyIncome, experienced: experienced, most: most};
+  return {age: query.age || 0, latitude: query.latitude || 0, longitude: query.longitude || 0, 
+    monthlyIncome: query.monthlyIncome || 0, experienced: query.experienced || false, most: query.most || ''};
 
 };
 
@@ -30,7 +17,6 @@ function calcSimilarity (params) {
   // Each aspect is assigned equal weight of 0.2.
   // Score for each aspect is calculated based on deviation. Larger deviation, less score.
   const math = require('math');
-  const roundTo = require('round-to');
   const aspectScore = {age: 0.2, latitude: 0.2, longitude: 0.2, monthlyIncome: 0.2, experienced: 0.2};
 
   if (params.most != '') {
@@ -47,8 +33,7 @@ function calcSimilarity (params) {
     experiencedScore = (people.experienced == params.experienced) ? aspectScore.experienced : 0;
 
     totalScore = (ageScore + latitudeScore + longitudeScore + monthlyIncomeScore + experiencedScore) / (aspectScore.age + aspectScore.latitude + aspectScore.longitude + aspectScore.monthlyIncome + aspectScore.experienced)
-    finalScore = roundTo(totalScore, 1);
-    people['score'] = finalScore;
+    people['score'] = totalScore;
 
     // console.log(people);
     if (people['score'] > 0) {
@@ -60,12 +45,18 @@ function calcSimilarity (params) {
 };
 
 function getRecordsWithHighestScore (dataWithScore) {
-  // Sort data based on their score
+  // Sort data based on their score.
   dataWithScore.sort(function(a, b) {
     return b.score - a.score;
   });
 
-  return dataWithScore.slice(0, 10);
+  // Get 10 people with highest score.
+  const roundTo = require('round-to');
+  recommendtns = dataWithScore.slice(0, 10);
+  recommendtns.forEach(function(recommendtn) {
+    recommendtn.score = roundTo(recommendtn.score, 1);
+  })
+  return recommendtns
 }
 
 function peopleLikeYou (query) {
